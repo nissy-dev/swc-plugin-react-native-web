@@ -1,0 +1,1 @@
+# swc-plugin-object-to-json-parse
