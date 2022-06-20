@@ -19,23 +19,48 @@ impl TransformVisitor {
     }
 
     fn visit_mut_module_items_to_transform_import(&mut self, module_body: &mut Vec<ModuleItem>) {
-        // Create the pairs of current import declaration and new import declarations for each react-native import
-        // Maps -> HashMap<target_import_declaration_idx, new_import_declarations>
-        let react_native_import_transform_maps = module_body
+        // Create the pairs of current declaration and new declarations for each react-native import/export
+        // Maps -> HashMap<target_declaration_idx, new_declarations>
+        let react_native_transform_maps = module_body
             .into_iter()
             .enumerate()
             .filter_map(|(idx, module_item)| match module_item {
                 ModuleItem::ModuleDecl(ModuleDecl::Import(import_decl)) => {
-                    if utils::is_react_native_module(import_decl) {
+                    if utils::import_decl_visitor_utils::is_react_native_module(import_decl) {
                         let new_imports = import_decl
                             .specifiers
                             .clone()
                             .into_iter()
                             .map(|specifier| {
-                                utils::create_new_import_decl(specifier, self.common_js)
+                                ModuleItem::ModuleDecl(ModuleDecl::Import(
+                                    utils::import_decl_visitor_utils::create_new_import_decl(
+                                        specifier,
+                                        self.common_js,
+                                    ),
+                                ))
                             })
                             .collect::<Vec<_>>();
                         Some(HashMap::from([(idx, new_imports)]))
+                    } else {
+                        None
+                    }
+                }
+                ModuleItem::ModuleDecl(ModuleDecl::ExportNamed(named_export_decl)) => {
+                    if utils::export_decl_visitor_utils::is_react_native_module(named_export_decl) {
+                        let new_exports = named_export_decl
+                            .specifiers
+                            .clone()
+                            .into_iter()
+                            .map(|specifier| {
+                                ModuleItem::ModuleDecl(ModuleDecl::ExportNamed(
+                                    utils::export_decl_visitor_utils::create_new_export_decl(
+                                        specifier,
+                                        self.common_js,
+                                    ),
+                                ))
+                            })
+                            .collect::<Vec<_>>();
+                        Some(HashMap::from([(idx, new_exports)]))
                     } else {
                         None
                     }
@@ -46,18 +71,15 @@ impl TransformVisitor {
 
         // transform the imports
         let mut idx_diff = 0;
-        for transform_map in react_native_import_transform_maps {
-            for (idx, new_imports) in transform_map {
+        for transform_map in react_native_transform_maps {
+            for (idx, new_declarations) in transform_map {
                 module_body.remove(idx + idx_diff);
 
-                for (i, new_import_declaration) in new_imports.clone().into_iter().enumerate() {
-                    module_body.insert(
-                        idx + idx_diff + i,
-                        ModuleItem::ModuleDecl(ModuleDecl::Import(new_import_declaration)),
-                    );
+                for (i, new_declaration) in new_declarations.clone().into_iter().enumerate() {
+                    module_body.insert(idx + idx_diff + i, new_declaration);
                 }
 
-                idx_diff += new_imports.len() - 1;
+                idx_diff += new_declarations.len() - 1;
             }
         }
     }
@@ -150,7 +172,7 @@ mod transform_visitor_tests {
             ..Default::default()
         }),
         |_| transform_visitor(),
-        rewrite_react_native_imports_with_unstable_create_element,
+        rewrite_react_native_web_imports,
         r#"
         import { unstable_createElement } from "react-native-web";
         import { StyleSheet, View, TouchableOpacity, processColor } from "react-native-web";
@@ -163,6 +185,44 @@ mod transform_visitor_tests {
         import TouchableOpacity from "react-native-web/dist/exports/TouchableOpacity";
         import processColor from "react-native-web/dist/exports/processColor";
         import * as ReactNativeModules from "react-native-web/dist/index";
+        "#
+    );
+
+    test!(
+        ::swc_ecma_parser::Syntax::Es(::swc_ecma_parser::EsConfig {
+            jsx: true,
+            ..Default::default()
+        }),
+        |_| transform_visitor(),
+        rewrite_react_native_exports,
+        r#"
+        export { View } from "react-native";
+        export { StyleSheet, Text, unstable_createElement } from "react-native";
+        "#,
+        r#"
+        export { default as View } from "react-native-web/dist/exports/View";
+        export { default as StyleSheet } from "react-native-web/dist/exports/StyleSheet";
+        export { default as Text } from "react-native-web/dist/exports/Text";
+        export { default as unstable_createElement } from "react-native-web/dist/exports/createElement";
+        "#
+    );
+
+    test!(
+        ::swc_ecma_parser::Syntax::Es(::swc_ecma_parser::EsConfig {
+            jsx: true,
+            ..Default::default()
+        }),
+        |_| transform_visitor(),
+        rewrite_react_native_web_exports,
+        r#"
+        export { View } from "react-native-web";
+        export { StyleSheet, Text, unstable_createElement } from "react-native-web";
+        "#,
+        r#"
+        export { default as View } from "react-native-web/dist/exports/View";
+        export { default as StyleSheet } from "react-native-web/dist/exports/StyleSheet";
+        export { default as Text } from "react-native-web/dist/exports/Text";
+        export { default as unstable_createElement } from "react-native-web/dist/exports/createElement";
         "#
     );
 }
