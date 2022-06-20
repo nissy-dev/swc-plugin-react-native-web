@@ -1,0 +1,16 @@
+[package]
+name = "swc-plugin-react-native-web"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+serde = "1.0.137"
+serde_json = "1.0.81"
+swc_plugin = "0.61.0"
+
+[dev-dependencies]
+swc_ecma_parser = "0.105.6"
+swc_ecma_transforms_testing = "0.91.0"

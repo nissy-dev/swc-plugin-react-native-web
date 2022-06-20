@@ -1,0 +1,13 @@
+{
+    "name": "swc-plugin-react-native-web",
+    "version": "0.1.0",
+    "description": "",
+    "author": "",
+    "license": "ISC",
+    "keywords": ["swc-plugin"],
+    "main": "target/wasm32-wasi/release/swc-plugin-react-native-web.wasm",
+    "scripts": {
+        "prepublishOnly": "cargo build --release"
+    },
+    "files": []
+}
