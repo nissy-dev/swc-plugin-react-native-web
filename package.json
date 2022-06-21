@@ -1,13 +1,23 @@
 {
-    "name": "swc-plugin-react-native-web",
+    "name": "@nissy-dev/swc-plugin-react-native-web",
     "version": "0.1.0",
-    "description": "",
-    "author": "",
-    "license": "ISC",
-    "keywords": ["swc-plugin"],
-    "main": "target/wasm32-wasi/release/swc-plugin-react-native-web.wasm",
-    "scripts": {
-        "prepublishOnly": "cargo build --release"
+    "description": "A SWC plugin that will alias react-native to react-native-web",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nissy-dev/swc-plugin-react-native-web.git"
     },
-    "files": []
+    "author": "Daiki Nishikawa <nd.12021218@gmail.com>",
+    "license": "MIT",
+    "keywords": ["swc-plugin", "react-native", "react-native-web"],
+    "bugs": {
+        "url": "https://github.com/nissy-dev/swc-plugin-react-native-web/issues"
+    },
+    "homepage": "https://github.com/nissy-dev/swc-plugin-react-native-web#readme",
+    "main": "target/wasm32-wasi/release/swc_plugin_react_native_web.wasm",
+    "files": [
+        "target/wasm32-wasi/release/swc_plugin_react_native_web.wasm"
+    ],
+    "scripts": {
+        "prepublishOnly": "cargo prepublish"
+    }
 }
