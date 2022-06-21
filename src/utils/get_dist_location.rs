@@ -6,15 +6,13 @@ pub fn get_dist_location(import_name: &str, common_js: bool) -> String {
         import_name
     };
 
-    if internal_name == "index" {
-        return String::from(format!("react-native-web/dist/{}index", format));
-    } else if internal_name != "" && module_map().contains(&internal_name) {
+    if internal_name != "" && module_map().contains(&internal_name) {
         return String::from(format!(
             "react-native-web/dist/{}exports/{}",
             format, internal_name
         ));
     } else {
-        panic!("{} is not a valid import", import_name);
+        return String::from(format!("react-native-web/dist/{}index", format));
     }
 }
 

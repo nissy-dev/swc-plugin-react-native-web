@@ -18,7 +18,7 @@ impl TransformVisitor {
         self.common_js = common_js;
     }
 
-    fn visit_mut_module_items_to_transform_import(&mut self, module_body: &mut Vec<ModuleItem>) {
+    fn visit_mut_module_items_to_transform(&mut self, module_body: &mut Vec<ModuleItem>) {
         // Create the pairs of current declaration and new declarations for each react-native import/export
         // Maps -> HashMap<target_declaration_idx, new_declarations>
         let react_native_transform_maps = module_body
@@ -83,12 +83,52 @@ impl TransformVisitor {
             }
         }
     }
+
+    fn visit_mut_var_decl_to_transform(&mut self, var_decl: &mut VarDecl) {
+        let react_native_transform_maps = var_decl
+            .decls
+            .clone()
+            .into_iter()
+            .enumerate()
+            .filter_map(|(idx, var_declarator)| {
+                if utils::variable_declaration_visitor::is_react_native_require(&var_declarator) {
+                    Some((
+                        idx,
+                        utils::variable_declaration_visitor::create_new_variable_decl(
+                            &var_declarator,
+                            self.common_js,
+                        ),
+                    ))
+                } else {
+                    None
+                }
+            })
+            .collect::<Vec<_>>();
+
+        let mut idx_diff = 0;
+        for (idx, _new_variable_decls) in react_native_transform_maps {
+            println!("idx: {}", idx);
+            println!("_new_variable_decls: {:?}", _new_variable_decls);
+            var_decl.decls.remove(idx + idx_diff);
+            if let Some(new_variable_decls) = _new_variable_decls {
+                for (i, new_variable_decl) in new_variable_decls.clone().into_iter().enumerate() {
+                    var_decl.decls.insert(idx + idx_diff + i, new_variable_decl);
+                }
+                idx_diff += new_variable_decls.len() - 1;
+            }
+        }
+    }
 }
 
 impl VisitMut for TransformVisitor {
     fn visit_mut_module(&mut self, module: &mut Module) {
-        self.visit_mut_module_items_to_transform_import(&mut module.body);
+        self.visit_mut_module_items_to_transform(&mut module.body);
         module.visit_mut_children_with(self);
+    }
+
+    fn visit_mut_var_decl(&mut self, var_decl: &mut VarDecl) {
+        self.visit_mut_var_decl_to_transform(var_decl);
+        var_decl.visit_mut_children_with(self);
     }
 }
 
@@ -223,6 +263,26 @@ mod transform_visitor_tests {
         export { default as StyleSheet } from "react-native-web/dist/exports/StyleSheet";
         export { default as Text } from "react-native-web/dist/exports/Text";
         export { default as unstable_createElement } from "react-native-web/dist/exports/createElement";
+        "#
+    );
+
+    test!(
+        ::swc_ecma_parser::Syntax::Es(::swc_ecma_parser::EsConfig {
+            jsx: true,
+            ..Default::default()
+        }),
+        |_| transform_visitor(),
+        rewrite_react_native_require,
+        r#"
+        const ReactNative = require("react-native");
+        const { View } = require("react-native");
+        const { StyleSheet, TouchableOpacity } = require("react-native");
+        "#,
+        r#"
+        const ReactNative = require("react-native-web/dist/index");
+        const View = require("react-native-web/dist/exports/View").default;
+        const StyleSheet = require("react-native-web/dist/exports/StyleSheet").default;
+        const TouchableOpacity = require("react-native-web/dist/exports/TouchableOpacity").default;
         "#
     );
 }

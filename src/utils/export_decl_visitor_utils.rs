@@ -11,7 +11,6 @@ pub fn is_react_native_module(node: &mut NamedExport) -> bool {
 
 pub fn create_new_export_decl(specifier: ExportSpecifier, common_js: bool) -> NamedExport {
     if let ExportSpecifier::Named(named_specifier) = specifier {
-        println!("{:?}", named_specifier);
         let local_name = get_local_name(&named_specifier).unwrap();
         let dist_location = get_dist_location(&local_name, common_js);
         let new_src = Str::from(dist_location);
