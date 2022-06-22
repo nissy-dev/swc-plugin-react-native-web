@@ -10,7 +10,7 @@
       }
     },
     "experimental": {
-      "plugins": [["@nissy-dev/swc-plugin-react-native-web", {}]]
+      "plugins": [["@nissy-dev/swc-plugin-react-native-web", { "commonjs": true }]]
     }
   }
 }

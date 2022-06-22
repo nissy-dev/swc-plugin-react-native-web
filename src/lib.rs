@@ -93,10 +93,10 @@ impl VisitMut for TransformVisitor {
 }
 
 #[derive(Debug, Default, Clone, Deserialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[serde(deny_unknown_fields)]
 pub struct Config {
     #[serde(default)]
-    pub common_js: bool,
+    pub commonjs: bool,
 }
 
 #[plugin_transform]
@@ -104,7 +104,7 @@ pub fn process_transform(program: Program, metadata: TransformPluginProgramMetad
     let mut visitor = TransformVisitor::new();
     let config = serde_json::from_str::<Config>(&metadata.plugin_config)
         .expect("invalid config for styled-components");
-    visitor.set_config(config.common_js);
+    visitor.set_config(config.commonjs);
     program.fold_with(&mut as_folder(visitor))
 }
 

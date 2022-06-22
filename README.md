@@ -1,6 +1,7 @@
 # swc-plugin-react-native-web
 
-A SWC plugin that will alias react-native to react-native-web.
+A SWC plugin that will alias react-native to react-native-web.  
+This SWC plugin is a rewritten version of [babel-plugin-react-native-web](https://github.com/necolas/react-native-web/tree/master/packages/babel-plugin-react-native-web). 
 
 ## Installation
 
@@ -14,7 +15,7 @@ npm install --save-dev @nissy-dev/swc-plugin-react-native-web
 {
   "jsc": {
     "experimental": {
-      "plugins": [["@nissy-dev/swc-plugin-react-native-web", { "common_js": false }]]
+      "plugins": [["@nissy-dev/swc-plugin-react-native-web", { "commonjs": false }]]
     }
   }
 }
