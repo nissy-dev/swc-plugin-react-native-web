@@ -103,7 +103,7 @@ pub struct Config {
 pub fn process_transform(program: Program, metadata: TransformPluginProgramMetadata) -> Program {
     let mut visitor = TransformVisitor::new();
     let config = serde_json::from_str::<Config>(&metadata.plugin_config)
-        .expect("invalid config for styled-components");
+        .expect("invalid config for swc-plugin-react-native-web");
     visitor.set_config(config.commonjs);
     program.fold_with(&mut as_folder(visitor))
 }
