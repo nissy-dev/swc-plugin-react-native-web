@@ -1,5 +1,5 @@
 # Example
 
-Next.js with React Native Web Exmaple
+Next.js with React Native Web exmaple
 
-Base example: https://github.com/vercel/next.js/tree/canary/examples/with-react-native-web
+Base project: https://github.com/vercel/next.js/tree/canary/examples/with-react-native-web
