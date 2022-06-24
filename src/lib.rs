@@ -75,11 +75,12 @@ impl TransformVisitor {
             for (idx, new_declarations) in transform_map {
                 module_body.remove(idx + idx_diff);
 
-                for (i, new_declaration) in new_declarations.clone().into_iter().enumerate() {
+                let len = new_declarations.len();
+                for (i, new_declaration) in new_declarations.into_iter().enumerate() {
                     module_body.insert(idx + idx_diff + i, new_declaration);
                 }
 
-                idx_diff += new_declarations.len() - 1;
+                idx_diff += len - 1;
             }
         }
     }
