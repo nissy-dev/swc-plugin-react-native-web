@@ -3,10 +3,13 @@ use swc_plugin::syntax_pos::DUMMY_SP;
 
 use super::get_dist_location::get_dist_location;
 
-pub fn is_react_native_module(node: &mut NamedExport) -> bool {
-    let src = node.clone().src.unwrap();
-    (src.value == Str::from("react-native").value)
-        || src.value == Str::from("react-native-web").value && node.specifiers.len() > 0
+pub fn is_react_native_module(node: &NamedExport) -> bool {
+    if let Some(src) = &node.src {
+        return (src.value == Str::from("react-native").value
+            || src.value == Str::from("react-native-web").value)
+            && node.specifiers.len() > 0;
+    }
+    return false;
 }
 
 pub fn create_new_export_decl(specifier: ExportSpecifier, common_js: bool) -> NamedExport {
@@ -21,7 +24,7 @@ pub fn create_new_export_decl(specifier: ExportSpecifier, common_js: bool) -> Na
                 sym: "default".into(),
                 optional: Default::default(),
             }),
-            exported: Some(named_specifier.orig.clone()),
+            exported: Some(named_specifier.orig),
             is_type_only: Default::default(),
         })];
         NamedExport {
@@ -44,10 +47,9 @@ pub fn create_new_export_decl(specifier: ExportSpecifier, common_js: bool) -> Na
     }
 }
 
-fn get_local_name(named_specifier: &ExportNamedSpecifier) -> Option<JsWord> {
-    let specifier = named_specifier.clone();
-    if let ModuleExportName::Ident(ident) = specifier.orig {
-        Some(ident.sym)
+fn get_local_name(named_specifier: &ExportNamedSpecifier) -> Option<&JsWord> {
+    if let ModuleExportName::Ident(ident) = &named_specifier.orig {
+        Some(&ident.sym)
     } else {
         None
     }

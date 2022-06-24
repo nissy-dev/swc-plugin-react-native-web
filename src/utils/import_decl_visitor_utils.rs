@@ -3,7 +3,7 @@ use swc_plugin::syntax_pos::DUMMY_SP;
 
 use super::get_dist_location::get_dist_location;
 
-pub fn is_react_native_module(node: &mut ImportDecl) -> bool {
+pub fn is_react_native_module(node: &ImportDecl) -> bool {
     (node.src.value == Str::from("react-native").value
         || node.src.value == Str::from("react-native-web").value)
         && node.specifiers.len() > 0
@@ -15,8 +15,8 @@ pub fn create_new_import_decl(specifier: ImportSpecifier, common_js: bool) -> Im
         let dist_location = get_dist_location(&import_name, common_js);
         let new_src = Str::from(dist_location);
         let new_specifiers = vec![ImportSpecifier::Default(ImportDefaultSpecifier {
-            span: named_specifier.span.clone(),
-            local: named_specifier.local.clone(),
+            span: named_specifier.span,
+            local: named_specifier.local,
         })];
         ImportDecl {
             span: DUMMY_SP,
@@ -38,11 +38,10 @@ pub fn create_new_import_decl(specifier: ImportSpecifier, common_js: bool) -> Im
     }
 }
 
-fn get_import_name(named_specifier: &ImportNamedSpecifier) -> JsWord {
-    let specifier = named_specifier.clone();
-    if let Some(ModuleExportName::Ident(ident)) = specifier.imported {
-        ident.sym
+fn get_import_name(named_specifier: &ImportNamedSpecifier) -> &JsWord {
+    if let Some(ModuleExportName::Ident(ident)) = &named_specifier.imported {
+        &ident.sym
     } else {
-        specifier.local.sym
+        &named_specifier.local.sym
     }
 }
