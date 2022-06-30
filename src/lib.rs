@@ -111,6 +111,7 @@ pub fn process_transform(program: Program, metadata: TransformPluginProgramMetad
 
 #[cfg(test)]
 mod transform_visitor_tests {
+    use swc_ecma_parser::{EsConfig, Syntax};
     use swc_ecma_transforms_testing::test;
 
     use super::*;
@@ -126,7 +127,7 @@ mod transform_visitor_tests {
     }
 
     test!(
-        ::swc_ecma_parser::Syntax::Es(::swc_ecma_parser::EsConfig {
+        Syntax::Es(EsConfig {
             jsx: true,
             ..Default::default()
         }),
@@ -147,7 +148,7 @@ mod transform_visitor_tests {
     );
 
     test!(
-        ::swc_ecma_parser::Syntax::Es(::swc_ecma_parser::EsConfig {
+        Syntax::Es(EsConfig {
             jsx: true,
             ..Default::default()
         }),
@@ -168,7 +169,7 @@ mod transform_visitor_tests {
     );
 
     test!(
-        ::swc_ecma_parser::Syntax::Es(::swc_ecma_parser::EsConfig {
+        Syntax::Es(EsConfig {
             jsx: true,
             ..Default::default()
         }),
@@ -190,7 +191,7 @@ mod transform_visitor_tests {
     );
 
     test!(
-        ::swc_ecma_parser::Syntax::Es(::swc_ecma_parser::EsConfig {
+        Syntax::Es(EsConfig {
             jsx: true,
             ..Default::default()
         }),
@@ -209,7 +210,7 @@ mod transform_visitor_tests {
     );
 
     test!(
-        ::swc_ecma_parser::Syntax::Es(::swc_ecma_parser::EsConfig {
+        Syntax::Es(EsConfig {
             jsx: true,
             ..Default::default()
         }),
