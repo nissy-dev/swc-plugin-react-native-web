@@ -13,7 +13,7 @@ swc_plugin = "0.61.0"
 
 [dev-dependencies]
 swc_ecma_parser = "0.105.6"
-swc_ecma_transforms_testing = "0.91.0"
+swc_ecma_transforms_testing = "0.95.0"
 
 [profile.release]
 codegen-units = 1
