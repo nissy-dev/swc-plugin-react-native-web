@@ -12,7 +12,7 @@ serde_json = "1.0.81"
 swc_plugin = "0.61.0"
 
 [dev-dependencies]
-swc_ecma_parser = "0.105.6"
+swc_ecma_parser = "0.108.0"
 swc_ecma_transforms_testing = "0.91.0"
 
 [profile.release]
