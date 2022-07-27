@@ -7,13 +7,13 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-serde = "1.0.137"
-serde_json = "1.0.81"
-swc_plugin = "0.87.0"
+serde = "1"
+serde_json = "1"
+swc_plugin = "0.77.0"
 
 [dev-dependencies]
-swc_ecma_parser = "0.115.0"
-swc_ecma_transforms_testing = "0.103.0"
+swc_ecma_parser = "0.111.0"
+swc_ecma_transforms_testing = "0.99.0"
 
 [profile.release]
 codegen-units = 1
