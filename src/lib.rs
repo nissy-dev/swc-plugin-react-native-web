@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use serde::Deserialize;
-use swc_plugin::{ast::*, plugin_transform, TransformPluginProgramMetadata};
+use swc_plugin::{ast::*, metadata::TransformPluginProgramMetadata, plugin_transform};
 
 mod utils;
 
@@ -103,8 +103,12 @@ pub struct Config {
 #[plugin_transform]
 pub fn process_transform(program: Program, metadata: TransformPluginProgramMetadata) -> Program {
     let mut visitor = TransformVisitor::new();
-    let config = serde_json::from_str::<Config>(&metadata.plugin_config)
-        .expect("invalid config for swc-plugin-react-native-web");
+    let config = serde_json::from_str::<Config>(
+        &metadata
+            .get_transform_plugin_config()
+            .expect("failed to get plugin config for swc-plugin-react-native-we"),
+    )
+    .expect("invalid config for swc-plugin-react-native-web");
     visitor.set_config(config.commonjs);
     program.fold_with(&mut as_folder(visitor))
 }
