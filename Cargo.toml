@@ -9,11 +9,10 @@ crate-type = ["cdylib"]
 [dependencies]
 serde = "1"
 serde_json = "1"
-swc_plugin = "0.88.0"
+swc_core = { version = "0.27.4", features = ["ecma_visit", "ecma_ast", "plugin_transform"] }
 
 [dev-dependencies]
-swc_ecma_parser = "0.116.0"
-swc_ecma_transforms_testing = "0.104.0"
+swc_core = { version = "0.27.4", features = ["ecma_parser"] }
 
 [profile.release]
 codegen-units = 1

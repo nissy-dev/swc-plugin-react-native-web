@@ -1,5 +1,13 @@
-use swc_plugin::ast::*;
-use swc_plugin::syntax_pos::DUMMY_SP;
+use swc_core::{
+    common::DUMMY_SP,
+    ecma::{
+        ast::{
+            ImportDecl, ImportDefaultSpecifier, ImportNamedSpecifier, ImportSpecifier,
+            ModuleExportName, Str,
+        },
+        atoms::JsWord,
+    },
+};
 
 use super::get_dist_location::get_dist_location;
 
@@ -20,7 +28,7 @@ pub fn create_new_import_decl(specifier: ImportSpecifier, common_js: bool) -> Im
         })];
         ImportDecl {
             span: DUMMY_SP,
-            src: new_src,
+            src: Box::new(new_src),
             specifiers: new_specifiers,
             type_only: Default::default(),
             asserts: None,
@@ -30,7 +38,7 @@ pub fn create_new_import_decl(specifier: ImportSpecifier, common_js: bool) -> Im
         let new_src = Str::from(dist_location);
         ImportDecl {
             span: DUMMY_SP,
-            src: new_src,
+            src: Box::new(new_src),
             specifiers: vec![specifier],
             type_only: Default::default(),
             asserts: None,

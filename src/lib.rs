@@ -1,7 +1,13 @@
 use std::collections::HashMap;
 
 use serde::Deserialize;
-use swc_plugin::{ast::*, metadata::TransformPluginProgramMetadata, plugin_transform};
+use swc_core::{
+    ecma::{
+        ast::{Module, ModuleDecl, ModuleItem, Program},
+        visit::{as_folder, FoldWith, VisitMut, VisitMutWith},
+    },
+    plugin::{plugin_transform, proxies::TransformPluginProgramMetadata},
+};
 
 mod utils;
 
@@ -115,8 +121,11 @@ pub fn process_transform(program: Program, metadata: TransformPluginProgramMetad
 
 #[cfg(test)]
 mod transform_visitor_tests {
-    use swc_ecma_parser::{EsConfig, Syntax};
-    use swc_ecma_transforms_testing::test;
+    use swc_core::ecma::{
+        parser::{EsConfig, Syntax},
+        transforms::testing::test,
+        visit::Fold,
+    };
 
     use super::*;
 
