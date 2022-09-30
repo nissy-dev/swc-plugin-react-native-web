@@ -9,14 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "12.2.4",
+    "next": "12.3.2-canary.13",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native-web": "0.18.1"
+    "react-native-web": "0.18.9"
   },
   "devDependencies": {
     "@nissy-dev/swc-plugin-react-native-web": "0.2.4",
-    "eslint": "8.18.0",
-    "eslint-config-next": "12.1.6"
+    "eslint": "8.24.0",
+    "eslint-config-next": "12.3.1"
   }
 }
