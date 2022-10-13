@@ -1,7 +1,13 @@
 use std::collections::HashMap;
 
-use serde::Deserialize;
-use swc_plugin::{ast::*, metadata::TransformPluginProgramMetadata, plugin_transform};
+use serde::{Deserialize, Serialize};
+use swc_core::{
+    ecma::{
+        ast::{Module, ModuleDecl, ModuleItem, Program},
+        visit::{as_folder, noop_visit_mut_type, FoldWith, VisitMut, VisitMutWith},
+    },
+    plugin::{plugin_transform, proxies::TransformPluginProgramMetadata},
+};
 
 mod utils;
 
@@ -87,13 +93,15 @@ impl TransformVisitor {
 }
 
 impl VisitMut for TransformVisitor {
+    noop_visit_mut_type!();
+
     fn visit_mut_module(&mut self, module: &mut Module) {
         self.visit_mut_module_items_to_transform_import(&mut module.body);
         module.visit_mut_children_with(self);
     }
 }
 
-#[derive(Debug, Default, Clone, Deserialize)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
     #[serde(default)]
@@ -101,12 +109,15 @@ pub struct Config {
 }
 
 #[plugin_transform]
-pub fn process_transform(program: Program, metadata: TransformPluginProgramMetadata) -> Program {
+pub fn swc_plugin_react_native_web(
+    program: Program,
+    metadata: TransformPluginProgramMetadata,
+) -> Program {
     let mut visitor = TransformVisitor::new();
     let config = serde_json::from_str::<Config>(
         &metadata
             .get_transform_plugin_config()
-            .expect("failed to get plugin config for swc-plugin-react-native-we"),
+            .expect("failed to get plugin config for swc-plugin-react-native-web"),
     )
     .expect("invalid config for swc-plugin-react-native-web");
     visitor.set_config(config.commonjs);
@@ -115,8 +126,11 @@ pub fn process_transform(program: Program, metadata: TransformPluginProgramMetad
 
 #[cfg(test)]
 mod transform_visitor_tests {
-    use swc_ecma_parser::{EsConfig, Syntax};
-    use swc_ecma_transforms_testing::test;
+    use swc_core::ecma::{
+        parser::{EsConfig, Syntax},
+        transforms::testing::test,
+        visit::Fold,
+    };
 
     use super::*;
 
