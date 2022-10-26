@@ -90,6 +90,6 @@ fn module_map() -> Vec<&'static str> {
         "unmountComponentAtNode",
         "useColorScheme",
         "useLocaleContext",
-        "useWindowDimensio",
+        "useWindowDimensions",
     ])
 }
