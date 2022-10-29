@@ -15,7 +15,7 @@
     "react-native-web": "0.18.9"
   },
   "devDependencies": {
-    "@nissy-dev/swc-plugin-react-native-web": "0.2.4",
+    "@nissy-dev/swc-plugin-react-native-web": "0.2.6",
     "eslint": "8.24.0",
     "eslint-config-next": "12.3.1"
   }
