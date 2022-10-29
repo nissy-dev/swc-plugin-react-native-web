@@ -34,7 +34,7 @@ pub fn create_new_export_decl(specifier: ExportSpecifier, common_js: bool) -> Na
         })];
         NamedExport {
             span: DUMMY_SP,
-            src: Some(new_src),
+            src: Some(Box::new(new_src)),
             specifiers: new_specifiers,
             type_only: Default::default(),
             asserts: None,
@@ -44,7 +44,7 @@ pub fn create_new_export_decl(specifier: ExportSpecifier, common_js: bool) -> Na
         let new_src = Str::from(dist_location);
         NamedExport {
             span: DUMMY_SP,
-            src: Some(new_src),
+            src: Some(Box::new(new_src)),
             specifiers: vec![specifier],
             type_only: Default::default(),
             asserts: None,
