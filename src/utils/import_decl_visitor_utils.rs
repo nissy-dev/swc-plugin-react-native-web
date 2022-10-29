@@ -28,7 +28,7 @@ pub fn create_new_import_decl(specifier: ImportSpecifier, common_js: bool) -> Im
         })];
         ImportDecl {
             span: DUMMY_SP,
-            src: Box::new(new_src),
+            src: new_src,
             specifiers: new_specifiers,
             type_only: Default::default(),
             asserts: None,
@@ -38,7 +38,7 @@ pub fn create_new_import_decl(specifier: ImportSpecifier, common_js: bool) -> Im
         let new_src = Str::from(dist_location);
         ImportDecl {
             span: DUMMY_SP,
-            src: Box::new(new_src),
+            src: new_src,
             specifiers: vec![specifier],
             type_only: Default::default(),
             asserts: None,
