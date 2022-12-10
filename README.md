@@ -22,3 +22,15 @@ npm install --save-dev @nissy-dev/swc-plugin-react-native-web
   }
 }
 ```
+
+## Compatibility
+
+Below is a table showing compatibility of the plugin. 
+The swc_core version refers to the version of the swc_core crate that the plugin has been compiled against.
+The Next.js version refers to the version I confirmed to work properly with this plugin.
+
+| Plugin version | swc_core version | Next.js version |
+| :--- | :---: | ---: |
+| 0.3.0 | 0.40.16 | ~13.0.0 |
+| 0.2.6 | 0.23.24 | ~12.3.1 |
+| 0.2.4 | - | 12.2.4 |
