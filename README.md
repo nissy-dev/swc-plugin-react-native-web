@@ -8,9 +8,9 @@ Inspired from [babel-plugin-react-native-web](https://github.com/necolas/react-n
 
 ## Caution
 
-I think the babel-plugin-react-native-web (also, this plugin) is not necessary in many cases in the term of tree shaking. (See https://github.com/necolas/react-native-web/discussions/2217 )
+I think the babel-plugin-react-native-web (also, this plugin) is not necessary in many cases in the term of tree shaking or minimizing bundle size. (See https://github.com/necolas/react-native-web/discussions/2217)
 
-Before using this plugin, please consider [the package aliasing](https://necolas.github.io/react-native-web/docs/setup/#package-aliasing) written in official docs.
+Before using this plugin, please consider about [the package aliasing](https://necolas.github.io/react-native-web/docs/setup/#package-aliasing).
 
 ## Installation
 
@@ -37,7 +37,7 @@ The swc_core version refers to the version of the swc_core crate that the plugin
 The Next.js version refers to the version I confirmed to work properly with this plugin.
 
 | Plugin version | swc_core version | Next.js version |
-| :--- | :---: | ---: |
+| :---: | :---: | :---: |
 | 0.3.0 | 0.40.16 | ~13.0.0 |
 | 0.2.6 | 0.23.24 | ~12.3.1 |
 | 0.2.4 | - | 12.2.4 |
